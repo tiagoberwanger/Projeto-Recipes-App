@@ -14,7 +14,7 @@ class ExploreFoodsByArea extends React.Component {
   }
 
   async componentDidMount() {
-    this.resizeH1SearchDiv();
+    this.changeH1Width();
     const areas = await fetchAreas();
     this.setOptionsState(areas);
   }
@@ -47,13 +47,15 @@ class ExploreFoodsByArea extends React.Component {
     this.setState({ selectedOption: target.value });
   }
 
-  resizeH1SearchDiv() {
+  changeH1Width() {
+    const h1 = document.querySelector('.global-h1');
+    const profileDiv = document.querySelector('.profile-icon-div');
     const eightHundred = 800;
     if (window.screen.availHeight < eightHundred) {
-      const h1 = document.querySelector('.global-h1');
-      h1.style.fontSize = '25px';
-      const bla = document.querySelector('.search-input-div');
-      bla.style.width = '90px';
+      h1.style.fontSize = '33px';
+      profileDiv.style.width = '70px';
+      const searchInputDiv = document.querySelector('.search-input-div');
+      searchInputDiv.style.width = '70px';
     }
   }
 
@@ -68,33 +70,50 @@ class ExploreFoodsByArea extends React.Component {
     return (
       <div className="explorefoods-container">
         <Header history={ history } />
-        <div className="explore-top-content">
-          <select
-            data-testid="explore-by-area-dropdown"
-            onChange={ (event) => this.setSelectedOption(event) }
-          >
-            {options.map((element, index) => (
-              <option key={ index } data-testid={ `${element.strArea}-option` }>
-                {element.strArea}
-              </option>
-            ))}
-            <option data-testid="All-option">All</option>
-          </select>
-        </div>
-        <div className="explore-middle-content">
+        {areaFoods
+          && (
+            <div className="by-area-content">
+              <select
+                data-testid="explore-by-area-dropdown"
+                onChange={ (event) => this.setSelectedOption(event) }
+              >
+                <option data-testid="All-option">All</option>
+                {options.map((element, index) => (
+                  <option key={ index } data-testid={ `${element.strArea}-option` }>
+                    {element.strArea}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        <div className="cards-container by-area-container">
           {areaFoods ? areaFoods.map((recipe, index) => (
-            <div key={ index } data-testid={ `${index}-recipe-card` }>
+            <div
+              className="card"
+              key={ index }
+              data-testid={ `${index}-recipe-card` }
+            >
               <input
                 data-testid={ `${index}-card-img` }
                 onClick={ () => this.redirectOnClick(recipe) }
                 type="image"
                 src={ recipe.strMealThumb }
                 alt="recipe-image"
-                width="200"
+                width="100%"
+                style={ { borderRadius: '4px' } }
               />
               <h4 data-testid={ `${index}-card-name` }>{recipe.strMeal}</h4>
             </div>
-          )) : '' }
+          )) : (
+            <div className="details-loading">
+              <div className="lds-ellipsis">
+                <div />
+                <div />
+                <div />
+                <div />
+              </div>
+            </div>
+          )}
         </div>
         <Footer history={ history } />
       </div>

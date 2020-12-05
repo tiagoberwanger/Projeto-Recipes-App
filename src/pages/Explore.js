@@ -4,27 +4,45 @@ import { connect } from 'react-redux';
 import { Footer, Header } from '../components';
 
 class Explore extends React.Component {
+  componentDidMount() {
+    this.changeH1Width();
+  }
+
+  changeH1Width() {
+    const h1 = document.querySelector('.global-h1');
+    const profileDiv = document.querySelector('.profile-icon-div');
+    const eightHundred = 800;
+    if (window.screen.availHeight < eightHundred) {
+      h1.style.fontSize = '36px';
+      profileDiv.style.width = '90px';
+      const searchInputDiv = document.querySelector('.search-input-div');
+      searchInputDiv.style.width = '70px';
+    }
+  }
+
   render() {
     const { history } = this.props;
     return (
       <div className="explore-buttons">
         <Header history={ history } />
-        <button
-          type="button"
-          className="explore-buttons"
-          data-testid="explore-food"
-          onClick={ () => history.push('/explorar/comidas') }
-        >
-          <h1>Explorar Comidas</h1>
-        </button>
-        <button
-          type="button"
-          className="explore-buttons"
-          onClick={ () => history.push('/explorar/bebidas') }
-          data-testid="explore-drinks"
-        >
-          <h1>Explorar Bebidas</h1>
-        </button>
+        <div className="explore-buttons-div">
+          <button
+            type="button"
+            className="explore-button"
+            data-testid="explore-food"
+            onClick={ () => history.push('/explorar/comidas') }
+          >
+            Explorar Comidas
+          </button>
+          <button
+            type="button"
+            className="explore-button"
+            onClick={ () => history.push('/explorar/bebidas') }
+            data-testid="explore-drinks"
+          >
+            Explorar Bebidas
+          </button>
+        </div>
         <Footer history={ history } />
       </div>
     );
